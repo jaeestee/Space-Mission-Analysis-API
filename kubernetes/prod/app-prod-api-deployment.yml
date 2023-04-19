@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jo25672-test-geneapi
+  labels:
+    app: jo25672-test-geneapi
+    username: jo25672
+    env: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jo25672-test-geneapi
+  template:
+    metadata:
+      labels:
+        app: jo25672-test-geneapi
+        username: jo25672
+        env: test
+    spec:
+      containers:
+        - name: jo25672-test-geneapi
+          imagePullPolicy: Always
+          image: jaeestee/gene_api:hw8
+          env:
+          - name: FLASK_APP
+            value: "gene_api.py"
+          - name: REDIS_IP
+            value: jo25672-test-redis-service
+          ports:
+          - name: http
+            containerPort: 5000
