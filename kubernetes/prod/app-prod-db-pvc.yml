@@ -2,10 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jo25672-test-redis-pvc
-  labels:
-    username: jo25672
-    env: test
+  name: prod-redis-pvc
 spec:
   accessModes:
     - ReadWriteOnce
