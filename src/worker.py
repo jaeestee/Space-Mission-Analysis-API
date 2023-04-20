@@ -12,41 +12,6 @@ with open('mission_launches.csv', 'r') as f:
 
 # q = HotQueue("queue", host="10.233.38.133", port=6379, db=1)
 
-def delete_data() -> str:
-    """
-    This function deletes the data completely.
-
-    Returns:
-        message (str): Message saying that the data was deleted.
-    """
-
-    #deletes the entire data set from the redis client
-    rd.flushdb()
-
-    message = 'Successfully deleted all the data from the dictionary!\n'
-    return message
-
-def post_data() -> str:
-    """
-    This function adds the DATA dictionary object with the data from the web and returns
-    a success message.
-
-    Returns:
-        message (str): Message saying that the data was successfully reloaded.
-    """
-
-    #stores the data from the get request into the data variable and converts it into a dictionary
-    data = requests.get(url='https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json')
-    data = data.json()
-
-    #stores the data into the redis client, but as a serialized dictionary string
-    rd.set('data', json.dumps(data))
-
-    #the success message
-    message = 'Successfully reloaded the dictionary with the data from the web!\n'
-
-    return message
-
 def get_data() -> dict:
     """
     This function returns the data from Redis, but only if it exists or is empty.
