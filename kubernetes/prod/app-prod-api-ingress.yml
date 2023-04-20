@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: "SpaceMissionAnalysis.coe332.tacc.cloud"
+  - host: "spacemissionanalysis.coe332.tacc.cloud"
     http:
         paths:
         - pathType: Prefix
@@ -17,4 +17,4 @@ spec:
             service:
               name: prod-api-nodeport-service
               port:
-                  number: 30933
+                  number: 32337
