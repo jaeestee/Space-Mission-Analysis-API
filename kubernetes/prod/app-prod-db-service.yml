@@ -2,15 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: jo25672-test-redis-service
-  labels:
-    username: jo25672
-    env: test
+  name: prod-redis-service
 spec:
   type: ClusterIP
   selector:
-    app: jo25672-test-redis
+    app: prod-redis
   ports:
-  - name: jo25672-test-redis
+  - name: prod-redis
     port: 6379
     targetPort: 6379
