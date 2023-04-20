@@ -2,30 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jo25672-test-redis
+  name: prod-redis
   labels:
-    app: jo25672-test-redis
-    username: jo25672
-    env: test
+    app: prod-redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jo25672-test-redis
+      app: prod-redis
   template:
     metadata:
       labels:
-        app: jo25672-test-redis
-        username: jo25672
-        env: test
+        app: prod-redis
     spec:
       containers:
-        - name: jo25672-test-redis
+        - name: prod-redis
           image: redis:7
           volumeMounts:
-          - name: jo25672-test-redis-pvc
+          - name: prod-redis-pvc
             mountPath: "/data"
       volumes:
-      - name: jo25672-test-redis-pvc
+      - name: prod-redis-pvc
         persistentVolumeClaim:
-          claimName: jo25672-test-redis-pvc
+          claimName: prod-redis-pvc
