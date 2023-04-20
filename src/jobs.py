@@ -10,7 +10,7 @@ def populate_launch_data():
         reader = csv.DictReader(f)
         for row in reader:
             data['launches'].append(dict(row))
-
+    return(data)
 # q = HotQueue("queue", host="10.233.38.133", port=6379, db=1)
 
 def get_data() -> dict:
