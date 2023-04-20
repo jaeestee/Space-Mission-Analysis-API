@@ -2,11 +2,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-    name: flask-nodeport-service
+    name: prod-api-nodeport-service
 spec:
     type: NodePort
     selector:
-        app: jo25672-test-geneapi
+        app: prod-api
     ports:
         - port: 5000
           targetPort: 5000
