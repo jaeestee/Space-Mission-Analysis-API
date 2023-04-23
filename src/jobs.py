@@ -3,6 +3,16 @@ from hotqueue import HotQueue
 import matplotlib as plt
 from geopy.geocoders import Nominatim
 
+def get_data() -> dict:
+    data = {}
+    data['launches'] = []
+
+    with open('mission_launches.csv', 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            data['launches'].append(dict(row))
+
+    return(data)
 def generate_jid():
     """
       Generate a pseudo-random identifier for a job.
@@ -134,6 +144,20 @@ def geocode_address(address:str) -> dict:
     locator = Nominatim(user_agent="myGeocoder")
     location = locator.geocode(country)
 
-    coordinates = {"latitude":location.latitude,"longitude":location.longitude}
+    coordinates = (location.latitude, location.longitude)
 
     return(coordinates)
+
+def create_all_coords(full_data_json:dict) -> list:
+    '''
+    '''
+    
+    coordinate_list = []
+    for item in full_data_json['launches']:
+        coords = geocode_address(item['Location'])
+        coordinate_list.append(coords)
+
+    return(coordinate_list)
+
+
+
