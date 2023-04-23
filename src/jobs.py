@@ -1,6 +1,7 @@
 import csv
 from hotqueue import HotQueue
 import matplotlib as plt
+from geopy.geocoders import Nominatim
 
 def generate_jid():
     """
@@ -124,4 +125,15 @@ def list_active_rockets() -> list:
     active_rockets = list(set(active_rockets)) # remove duplicates from list
     return(active_rockets)
 
-print(list_active_rockets())
+def geocode_address(address:str) -> dict:
+    '''
+
+    '''
+    last_comma_index = address.rfind(",")
+    country = address[last_comma_index + 1:]
+    locator = Nominatim(user_agent="myGeocoder")
+    location = locator.geocode(country)
+
+    coordinates = {"latitude":location.latitude,"longitude":location.longitude}
+
+    return(coordinates)
