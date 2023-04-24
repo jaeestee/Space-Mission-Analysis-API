@@ -2,8 +2,20 @@ import csv
 from hotqueue import HotQueue
 import matplotlib as plt
 from geopy.geocoders import Nominatim
+from collections import Counter
+import folium
 
-def get_data() -> dict:
+def get_launches_data() -> dict:
+    '''
+        This function pulls the full data csv from the current directory and formats
+        it into json format for use in most other functions.
+
+        Args:
+            None
+        Returns:
+            data (dict) : A dictionary containing the key 'launches' that contains
+            a list of dictionaries of each launch
+    '''
     data = {}
     data['launches'] = []
 
@@ -99,23 +111,52 @@ def get_data() -> dict:
 
     return redisData
 
-def get_rocket_names_by_org(org_name:str) -> list:
+def get_rocket_names_by_org(full_data_json:dict,org_name:str) -> list:
+    '''
+        This function gets a list of all the rockets launched by an organization.
+
+        Args:
+            full_data_json (dict) : The full data json from the database
+            org_name (str) : The name of the desired organization
+        Returns:
+            rocket_names (list) : A list of strings of rocket names
+    '''
+
     rocket_names = []
-    for item in data['launches']:
+    for item in full_data_json['launches']:
         if item['Organisation'] == org_name:
-            rocket_names.append(item['Detail'])
+            rocket_names.append(item['Detail'][:item['Detail'].index(" |")])
 
     return(rocket_names)
 
-def get_total_cost_for_org(org_name:str) -> float:
+def get_total_cost_for_org(full_data_json:dict,org_name:str) -> float:
+    '''
+        This function calculates the total amount of money in millions USD that
+        an organization has spent on all of their launches.
+
+        Args:
+            full_data_json (dict) : The full data json from the database
+            org_name (str) : The name of the desired organization
+        Returns:
+            cost (float) : The total cost of all launches
+    '''
     cost = 0
-    for item in data['launches']:
+    for item in full_data_json['launches']:
         if item['Organisation'] == org_name:
             cost += item['Price']
 
     return(cost) # cost is in millions
 
 def get_success_rate_for_org(org_name:str) -> float:
+    '''
+        This function finds the mission success rate of an organization.
+        
+        Args:
+            org_name (str) : This is the name of the desired organization
+        Returns:
+            success_rate (float) : This is the success rate as a ratio (between
+            0.0 and 1.0)
+    '''
     total_launches = 0
     successful_launches = 0
     for item in data['launches']:
@@ -127,37 +168,91 @@ def get_success_rate_for_org(org_name:str) -> float:
 
     return(success_rate)
 
-def list_active_rockets() -> list:
+def list_active_rockets(full_data_json:dict) -> list:
+    '''
+        This function gets a list of all currently active rockets in the database.
+
+        Args:
+            full_data_json (dict) : The full data json from the database
+        Returns:
+            active_rockets (list) : A list of strings of all the names of the
+            active rockets.
+    '''
     active_rockets = []
-    for item in data['launches']:
+    for item in full_data_json['launches']:
         if item['Rocket_Status'] == 'StatusActive':
             active_rockets.append(item['Detail'][:item['Detail'].index(" |")])
     active_rockets = list(set(active_rockets)) # remove duplicates from list
     return(active_rockets)
 
-def geocode_address(address:str) -> dict:
+def geocode_address(address:str) -> tuple:
     '''
+        This function takes the Location key value from a launche and geocodes
+        it to get latitude and longitude coordinates.
 
+        Args:
+            address (str) : The Location key value from the database (ex. "New 
+            Mexico, USA")
+        Returns:
+            coordinates (tuple) : A tuple containing the latitude and longitude
+            of the country containing the address
     '''
     last_comma_index = address.rfind(",")
     country = address[last_comma_index + 1:]
     locator = Nominatim(user_agent="myGeocoder")
     location = locator.geocode(country)
-
+    
+    
     coordinates = (location.latitude, location.longitude)
-
     return(coordinates)
-
+    
 def create_all_coords(full_data_json:dict) -> list:
     '''
+        This function goes through the entire kaggle database and creates a list
+        of coordinates for each rocket launch location.
+
+        Args:
+            full_data_json (dict) : The full data json from the database
+        Returns:
+            coordinate_list (list) : list of tuples containing the latitude and 
+            longitudes of every launch
     '''
     
     coordinate_list = []
+    count = 1
     for item in full_data_json['launches']:
-        coords = geocode_address(item['Location'])
-        coordinate_list.append(coords)
-
+        count += 1
+        if count % 10 == 0:
+            print(count)
+        try:
+            coords = geocode_address(item['Location'])
+            coordinate_list.append(coords)
+        except:
+            continue
     return(coordinate_list)
 
+def create_map(full_data_json:dict) -> file:
+    '''
+        This function creates a map of the world and places markers on each country
+        that has launched spacebound rockets. These markers display how many launches
+        each country has performed.
+
+        Args:
+            full_data_json (dict) : The full data json from the database
+        
+        Returns:
+            map.html (file) : This is an html file of the map generated in the function
+    '''
+    coordinates = create_all_coords(full_data_json)
+    coord_counts = Counter(coordinates)
+    
+    map_center = [0,0]
+    world_map = folium.Map(location=map_center, zoom_start=2)
+    for coord, count in coord_counts.items():
+        lat, lon, = coord
+        popup_text = f"Launches: {count}" 
+        folium.Marker(location=[lat, lon], popup=popup_text).add_to(world_map)
+
+    world_map.save("map.html")
 
 
