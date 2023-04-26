@@ -5,6 +5,6 @@ RUN pip install requests==2.22.0
 RUN pip install redis==4.5.1
 RUN pip install matplotlib==3.7.1
 
-COPY gene_api.py /gene_api.py
+COPY ../src/flask_api.py /flask_api.py
 
 CMD ["python", "flask_api.py"]

@@ -4,6 +4,15 @@ import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
 import folium
+import uuid
+from redis import Redis
+
+redis_ip = os.environ.get('REDIS_IP')
+if not redis_ip:
+    raise Exception()
+
+rd = redis.Redis(host=redis_ip, port=6379, db=0)
+q = hotqueue.HotQueue('queue', host=redis_ip, port=6379, db=1)
 
 def get_launches_data() -> dict:
     '''
@@ -25,6 +34,7 @@ def get_launches_data() -> dict:
             data['launches'].append(dict(row))
 
     return(data)
+
 def generate_jid():
     """
       Generate a pseudo-random identifier for a job.
@@ -36,23 +46,16 @@ def generate_job_key(jid):
       Generate the redis key from the job id to be used when storing, retrieving or updating
       a job in the database.
     """
-    return 'job.{}'.format(jid)
+    return '{}'.format(jid)
 
-def instantiate_job(jid, status, start, end):
+def instantiate_job(jid, route, status):
     """
       Create the job object description as a python dictionary. Requires the job id, status,
       start and end parameters.
     """
-    if type(jid) == str:
-        return {'id': jid,
-                'status': status,
-                'start': start,
-                'end': end
-        }
-    return {'id': jid.decode('utf-8'),
-            'status': status.decode('utf-8'),
-            'start': start.decode('utf-8'),
-            'end': end.decode('utf-8')
+    return {'id': jid,
+            'route': route,
+            'status': status
     }
 
 def save_job(job_key, job_dict):
@@ -63,20 +66,20 @@ def queue_job(jid):
     """Add a job to the redis queue."""
     q.put(jid)
 
-def add_job(start, end, status="submitted"):
+def add_job(route, status="submitted"):
     """Add a job to the redis queue."""
-    jid = _generate_jid()
-    job_dict = instantiate_job(jid, status, start, end)
+    jid = generate_jid()
+    job_dict = instantiate_job(jid, route, status)
     save_job(jid, job_dict)
     queue_job(jid)
     return job_dict
 
 def update_job_status(jid, status):
     """Update the status of job with job id `jid` to status `status`."""
-    job = get_job_by_id(jid)
+    job = rd.hget(jid)
     if job:
         job['status'] = status
-        _save_job(_generate_job_key(jid), job)
+        save_job(generate_job_key(jid), job)
     else:
         raise Exception()
 
