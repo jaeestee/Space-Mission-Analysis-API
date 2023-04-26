@@ -3,6 +3,14 @@ from geopy.geocoders import Nominatim
 from redis import Redis
 from jobs import *
 
+redis_ip = os.environ.get('REDIS_IP')
+if not redis_ip:
+    raise Exception()
+
+rd = redis.Redis(host = redis_ip, port=6379, db=0)
+q = hotqueue.HotQueue('queue', host = redis_ip, port = 6379, db=1)
+rd2 = redis.Redis(host = redis_ip, port=6379, db=2)
+
 @q.worker
 def execute_job(item: str) -> dict:
     """
