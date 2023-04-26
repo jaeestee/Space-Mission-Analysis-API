@@ -6,6 +6,7 @@ from collections import Counter
 import folium
 import uuid
 from redis import Redis
+import os
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
