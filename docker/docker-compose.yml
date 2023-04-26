@@ -28,7 +28,7 @@ services:
             dockerfile: ./Dockerfile.wrk
         depends_on:
             - redis-db
-        image: jaeestee/space_mission_analysis:worker
+        image: jaeestee/space_mission_analysis:wrk
         ports:
             - 5000:5000
         volumes:
