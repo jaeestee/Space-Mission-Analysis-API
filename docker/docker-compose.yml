@@ -15,7 +15,7 @@ services:
             dockerfile: ./Dockerfile
         depends_on:
             - redis-db
-        image: jaeestee/gene_api:hw8
+        image: jaeestee/space_mission_analysis
         ports:
             - 5000:5000
         volumes:
