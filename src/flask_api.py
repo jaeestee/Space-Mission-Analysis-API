@@ -1,7 +1,8 @@
 from flask import Flask, request, send_file
-import requests, redis, json
+import requests, json
 import os
 import jobs as j 
+from redis import Redis
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
