@@ -18,10 +18,10 @@ spec:
       containers:
         - name: prod-api
           imagePullPolicy: Always
-          image: jaeestee/gene_api:hw8
+          image: jaeestee/space_mission_analysis:api
           env:
           - name: FLASK_APP
-            value: "gene_api.py"
+            value: "flask_api.py"
           - name: REDIS_IP
             value: prod-redis-service
           ports:

@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-wrk
+  labels:
+    app: prod-wrk
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prod-wrk
+  template:
+    metadata:
+      labels:
+        app: prod-wrk
+    spec:
+      containers:
+        - name: prod-wrk
+          imagePullPolicy: Always
+          image: jaeestee/space_mission_analysis:worker
+          env:
+          - name: WORKER
+            value: "worker.py"
+          - name: REDIS_IP
+            value: prod-redis-service
+          ports:
+          - name: http
+            containerPort: 5000
