@@ -7,8 +7,12 @@ import folium
 import uuid
 from redis import Redis
 
-rd = redis.Redis(host='redis-db', port=6379, db=0)
-q = hotqueue.HotQueue('queue', host='redis-db', port=6379, db=1)
+redis_ip = os.environ.get('REDIS_IP')
+if not redis_ip:
+    raise Exception()
+
+rd = redis.Redis(host=redis_ip, port=6379, db=0)
+q = hotqueue.HotQueue('queue', host=redis_ip, port=6379, db=1)
 
 def get_launches_data() -> dict:
     '''
