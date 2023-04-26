@@ -7,6 +7,7 @@ import folium
 import uuid
 from redis import Redis
 import os
+import json
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
@@ -66,7 +67,7 @@ def instantiate_job(jid, route, status):
 
 def save_job(job_key, job_dict):
     """Save a job object in the Redis database."""
-    rd.hset(job_key, job_dict)
+    rd.set(job_key, json.dumps(job_dict))
 
 def queue_job(jid):
     """Add a job id to the redis queue."""
@@ -85,7 +86,7 @@ def add_job(route):
 def update_job_status(jid, status):
     """Update the status of job with job id `jid` to status `status`."""
 
-    job = rd.hget(jid)
+    job = json.loads(rd.get(jid))
     if job:
         job['status'] = status
         save_job(generate_job_key(jid), job)
