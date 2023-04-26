@@ -7,6 +7,7 @@ import folium
 import uuid
 from redis import Redis
 import os
+import json
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
@@ -66,7 +67,7 @@ def instantiate_job(jid, route, status):
 
 def save_job(job_key, job_dict):
     """Save a job object in the Redis database."""
-    rd.hset(job_key, job_dict)
+    rd.set(job_key, json.dumps(job_dict))
 
 def queue_job(jid):
     """Add a job id to the redis queue."""
@@ -85,13 +86,21 @@ def add_job(route):
 def update_job_status(jid, status):
     """Update the status of job with job id `jid` to status `status`."""
 
-    job = rd.hget(jid)
+    job = json.loads(rd.get(jid))
     if job:
         job['status'] = status
         save_job(generate_job_key(jid), job)
     else:
         raise Exception()
 
+def list_of_jobs():
+    
+    jobsList = []
+    for key in rd.keys():
+        jobsList.append(json.loads(rd.get(key.decode('utf-8'))))
+        
+    return jobsList
+        
 # JOB RELATED
 
 def populate_launch_data():
@@ -116,7 +125,7 @@ def get_data() -> dict:
     #try-except block that returns if the data doesn't exist and an error occurs because of it
     try:
         #un-seralizing the string into a dictionary
-        redisData = json.loads(rd.get('data'))
+        redisData = json.loads(rd2.get('data'))
     except NameError:
         return 'The data does not exist...\n'
     except TypeError:

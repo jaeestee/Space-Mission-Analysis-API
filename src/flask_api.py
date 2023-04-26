@@ -22,7 +22,7 @@ def delete_data() -> str:
     """
 
     #deletes the entire data set from the redis client
-    rd.flushdb()
+    rd2.set('data', json.dumps({}))
 
     message = 'Successfully deleted all the data from the dictionary!\n'
     return message
@@ -40,7 +40,7 @@ def post_data() -> str:
     data = j.get_launches_data()
 
     #stores the data into the redis client, but as a serialized dictionary string
-    rd.set('data', json.dumps(data))
+    rd2.set('data', json.dumps(data))
 
     #the success message
     message = 'Successfully reloaded the dictionary with the data from the web!\n'
