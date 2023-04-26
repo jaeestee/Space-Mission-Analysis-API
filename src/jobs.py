@@ -11,9 +11,9 @@ redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
     raise Exception()
 
-rd = redis.Redis(host=redis_ip, port=6379, db=0)
-q = hotqueue.HotQueue('queue', host=redis_ip, port=6379, db=1)
-rd2 = redis.Redis(host='redis-db', port=6379, db=2)
+rd = redis.Redis(host = redis_ip, port=6379, db=0)
+q = hotqueue.HotQueue('queue', host = redis_ip, port = 6379, db=1)
+rd2 = redis.Redis(host = redis_ip, port=6379, db=2)
 
 # MISCELLANEOUS 
 
@@ -157,6 +157,7 @@ def get_total_cost_for_org(full_data_json:dict, org_name:str) -> float:
 
     return(cost) # cost is in millions
 
+# TODO
 def get_success_rate_for_org(org_name:str) -> float:
     '''
         This function finds the mission success rate of an organization.

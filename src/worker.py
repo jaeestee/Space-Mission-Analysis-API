@@ -1,10 +1,5 @@
-import csv
 from hotqueue import HotQueue
-import matplotlib as plt
 from geopy.geocoders import Nominatim
-from collections import Counter
-import folium
-import uuid
 from redis import Redis
 from jobs import *
 
@@ -38,7 +33,7 @@ def execute_job(item: str) -> dict:
     function = args[1] # second part of the route, e.g., '/names-by-org'
     
     # EXECUTE FUNCTION IN ROUTE
-    full_data = get_launches_data()
+    full_data = get_data()
     result = []
 
     if function == 'names-by-org':
@@ -47,8 +42,6 @@ def execute_job(item: str) -> dict:
         result = get_total_cost_for_org(full_data, args[2])
     elif function == 'map-of-launches':
         result = create_map(full_data)
-    elif function == 'success-failure-by-org':
-        result = get_success_rate_for_org(args[2])
     elif function == 'list-all-active-rockets':
         result = list_active_rockets(full_data)
     else: 
@@ -64,6 +57,5 @@ def execute_job(item: str) -> dict:
     new_job = rd.hget(current_jid)
 
     return new_job
-
 
 execute_job()
