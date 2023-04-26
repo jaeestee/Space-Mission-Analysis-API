@@ -93,6 +93,14 @@ def update_job_status(jid, status):
     else:
         raise Exception()
 
+def list_of_jobs():
+    
+    jobsList = []
+    for key in rd.keys():
+        jobsList.append(json.loads(rd.get(key.decode('utf-8'))))
+        
+    return jobsList
+        
 # JOB RELATED
 
 def populate_launch_data():
