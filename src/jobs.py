@@ -117,7 +117,7 @@ def get_data() -> dict:
     #try-except block that returns if the data doesn't exist and an error occurs because of it
     try:
         #un-seralizing the string into a dictionary
-        redisData = json.loads(rd.get('data'))
+        redisData = json.loads(rd2.get('data'))
     except NameError:
         return 'The data does not exist...\n'
     except TypeError:
