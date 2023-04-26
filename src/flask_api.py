@@ -47,14 +47,21 @@ def post_data() -> str:
 
     return message
 
-@app.route('/jobs', methods=['POST'])
-def jobs_api():
-    
-    try:
-        job = request.get_json(force=True)
-    except Exception as e:
-          return True, json.dumps({'status': "Error", 'message': 'Invalid JSON: {}.'.format(e)})
-    return json.dumps(j.add_job(job['route'], job['status']))
+@app.route('/jobs', methods=['GET'])
+def get_list_of_jobs():
 
+    jobsList = j.list_of_jobs()
+    return jobsList
+
+@app.route('/jobs/<string:route>', methods=['POST'])
+def post_job(route: str) -> dict:
+    j.add_job(route)
+    return 'Successfully queued a job! \nTo view the status of the job, curl /jobs.\n'
+
+@app.route('/jobs/<string:jid>', methods=['GET'])
+def get_job(jid: str) -> dict:
+    results = rd2.get(jid)
+    return results
+    
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
