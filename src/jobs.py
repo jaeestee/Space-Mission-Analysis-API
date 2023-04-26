@@ -72,12 +72,14 @@ def queue_job(jid):
     """Add a job id to the redis queue."""
     q.put(jid)
 
-def add_job(route, status="submitted"):
+def add_job(route):
     """Fully add a job to the redis queue and save to redis history."""
+
     jid = generate_jid()
-    job_dict = instantiate_job(jid, route, status)
+    job_dict = instantiate_job(jid, route, "submitted")
     save_job(jid, job_dict)
     queue_job(jid)
+
     return job_dict
 
 def update_job_status(jid, status):
