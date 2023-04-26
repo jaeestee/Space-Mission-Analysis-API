@@ -29,6 +29,8 @@ services:
         depends_on:
             - redis-db
         image: jaeestee/space_mission_analysis:wrk
+        ports:
+            - 5001:5001
         volumes:
             - ./config.yaml:/config.yaml
         environment:

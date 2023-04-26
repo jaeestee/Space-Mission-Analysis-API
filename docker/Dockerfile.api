@@ -10,5 +10,6 @@ RUN pip install folium==0.14.0
 
 COPY /src/flask_api.py /flask_api.py
 COPY /src/jobs.py /jobs.py
+COPY /src/mission_launches.csv /mission_launches.csv
 
 CMD ["python", "flask_api.py"]
