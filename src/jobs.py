@@ -1,6 +1,6 @@
 import csv
 from hotqueue import HotQueue
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
 import folium
@@ -231,7 +231,7 @@ def create_all_coords(full_data_json:dict) -> list:
             continue
     return(coordinate_list)
 
-def create_map(full_data_json:dict) -> file:
+def create_map(full_data_json:dict):
     '''
         This function creates a map of the world and places markers on each country
         that has launched spacebound rockets. These markers display how many launches
@@ -255,4 +255,32 @@ def create_map(full_data_json:dict) -> file:
 
     world_map.save("map.html")
 
+def country_spending_bar_graph(full_data_json:dict):
+    cost_data = {}
+    for item in full_data_json['launches']: 
+        address = item['Location']
+        last_comma_index = address.rfind(",")
+        country = address[last_comma_index + 2:]
+        
+        # Correct launch sites to the spending country
+        if country == 'Gran Canaria':
+            country = 'USA'
+        elif country == 'Yellow Sea':
+            country = 'China'
+        elif country == 'Kazakhstan':
+            country = 'Russia'
+        elif country == 'Pacific Missile Range Facility':
+            country = 'USA'
 
+        # sort spending into countries. if country isnt in dict, add it
+        if country in cost_data:
+            try:
+                cost_data[country] += float(item['Price'])
+            except:
+                continue
+        else:
+            try:
+                cost_data[country] = float(item['Price'])
+            except:
+                continue
+    return(cost_data)
