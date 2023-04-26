@@ -286,4 +286,16 @@ def country_spending_bar_graph(full_data_json:dict):
                 cost_data[country] = float(item['Price'])
             except:
                 continue
-    return(cost_data)
+    countries = list(cost_data.keys())
+    costs = list(cost_data.values())
+
+    fig = plt.figure(figsize = (10, 5))
+
+    plt.bar(countries, costs, color='maroon',width = 0.4)
+
+    plt.xlabel('Countries')
+    plt.ylabel('Total Space Launch Spending in Millions USD')
+    plt.title('Total Space Launch Spending of Different Countries')
+
+    plt.savefig('spending_bar.png')
+    
