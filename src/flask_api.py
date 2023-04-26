@@ -63,7 +63,11 @@ def post_job(route: str) -> dict:
 
 @app.route('/jobs/<string:jid>', methods=['GET'])
 def get_job(jid: str) -> dict:
-    results = rd2.get(jid)
+    try:
+        results = rd2.get(jid)
+    except TypeError:
+        return 'The job ID is invalid, please try again.\n'
+        
     return results
     
 if __name__ == '__main__':
