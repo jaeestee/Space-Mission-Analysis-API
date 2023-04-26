@@ -69,6 +69,41 @@ def get_job(jid: str) -> dict:
         return 'The job ID is invalid, please try again.\n'
         
     return results
+
+@app.route('/help', methods=['GET'])
+def help() -> str:
+    """
+    This function returns a human readable string that explains all the available
+    routes in this API.
+    Returns:
+       helpOutput (str): The string that explains the routes.
+    """
+
+    helpOutput = '''usage: curl localhost:5000[<route>][?<query parameter>]\n
+The different possible routes:
+    /post-data                          Loads/reloads the dictionary with data from the website
+    /delete-data                        Deletes all the data from the dictionary
+    
+    /                                   Returns the entire data set (if it exists)
+    /now                                Returns the current location of the ISS
+    /epochs                             Returns the list of all Epochs in the data set
+    /epochs/<epoch>                     Returns the state vectors for a specific Epoch from the data set
+    /epochs/<epoch>/location            Returns the location for a specific Epoch in the data set
+    /epochs/<epoch>/speed               Returns the instantaneous speed for a specific Epoch in the data set
+    /comment                            Returns the comments in the ISS data
+    /header                             Returns the header in the ISS data
+    /metadata                           Returns the metadata in the ISS data
+    /help                               Returns the help text that describes each route
+    
+The different query parameters (only works for the "/epochs" route):
+    limit=<int>                         Returns a specific integer amount of Epochs from the data set
+    offset=<int>                        Returns the entire data set starting offset by a certain integer amount
+    limit=<int>'&'offset=<int>          Combining the limit and offset query parameters
+    example:
+    /epochs?limit=15'&'offset=3         Returns the 15 Epochs from the data set offset by 3
+'''
+    
+    return helpOutput
     
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
