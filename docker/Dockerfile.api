@@ -5,7 +5,7 @@ RUN pip install requests==2.22.0
 RUN pip install redis==4.5.1
 RUN pip install matplotlib==3.7.1
 
-COPY ../src/flask_api.py /flask_api.py
-COPY ../src/jobs.py /jobs.py
+COPY /src/flask_api.py /flask_api.py
+COPY /src/jobs.py /jobs.py
 
 CMD ["python", "flask_api.py"]
