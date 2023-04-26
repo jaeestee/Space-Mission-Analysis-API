@@ -2,6 +2,7 @@ from hotqueue import HotQueue
 from geopy.geocoders import Nominatim
 from redis import Redis
 from jobs import *
+import json
 
 @q.worker
 def execute_job(item: str) -> dict:
