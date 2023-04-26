@@ -79,28 +79,23 @@ def help() -> str:
        helpOutput (str): The string that explains the routes.
     """
 
-    helpOutput = '''usage: curl localhost:5000[<route>][?<query parameter>]\n
-The different possible routes:
-    /post-data                          Loads/reloads the dictionary with data from the website
-    /delete-data                        Deletes all the data from the dictionary
-    
-    /                                   Returns the entire data set (if it exists)
-    /now                                Returns the current location of the ISS
-    /epochs                             Returns the list of all Epochs in the data set
-    /epochs/<epoch>                     Returns the state vectors for a specific Epoch from the data set
-    /epochs/<epoch>/location            Returns the location for a specific Epoch in the data set
-    /epochs/<epoch>/speed               Returns the instantaneous speed for a specific Epoch in the data set
-    /comment                            Returns the comments in the ISS data
-    /header                             Returns the header in the ISS data
-    /metadata                           Returns the metadata in the ISS data
+    helpOutput = '''usage: curl -X [COMMAND] localhost:5000/<ROUTE>\n
+Different COMMANDS: 
+    GET                                 Responsible for returning any data. 
+    POST                                Responsible for generating any data. 
+    DELETE                              Responsible for deleting any data. 
+
+GET routes:
+    /jobs                               Returns list of all previous jobs.
+    /jobs/<string:JOB_ID>               Returns specific job given job's id.
     /help                               Returns the help text that describes each route
     
-The different query parameters (only works for the "/epochs" route):
-    limit=<int>                         Returns a specific integer amount of Epochs from the data set
-    offset=<int>                        Returns the entire data set starting offset by a certain integer amount
-    limit=<int>'&'offset=<int>          Combining the limit and offset query parameters
-    example:
-    /epochs?limit=15'&'offset=3         Returns the 15 Epochs from the data set offset by 3
+POST routes:
+    /data                               Updates the current variable data with the current .csv.
+    /jobs/<string:ROUTE>                Queues a job specified by ROUTE, and completes it.
+
+DELETE routes:
+    /data                               Deletes all of the launch mission data.
 '''
     
     return helpOutput
