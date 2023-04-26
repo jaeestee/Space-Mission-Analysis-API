@@ -3,14 +3,15 @@ import requests, redis, json
 import os
 import jobs as j 
 
-
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
     raise Exception()
 
-app = Flask(__name__)
+rd = Redis(host = redis_ip, port=6379, db=0)
+q = HotQueue('queue', host = redis_ip, port = 6379, db=1)
+rd2 = Redis(host = redis_ip, port=6379, db=2)
 
-rd = redis.Redis(host=redis_ip, port=6379, db=0, decode_responses=True)
+app = Flask(__name__)
 
 @app.route('/data', methods=['DELETE'])
 def delete_data() -> str:
