@@ -3,6 +3,7 @@ import requests, redis, json
 import os
 import jobs as j 
 
+
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
     raise Exception()
@@ -36,9 +37,7 @@ def post_data() -> str:
         message (str): Message saying that the data was successfully reloaded.
     """
 
-    #stores the data from the get request into the data variable and converts it into a dictionary
-    data = requests.get(url='https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json')
-    data = data.json()
+    data = j.get_launches_data()
 
     #stores the data into the redis client, but as a serialized dictionary string
     rd.set('data', json.dumps(data))
@@ -50,7 +49,7 @@ def post_data() -> str:
 
 @app.route('/jobs', methods=['POST'])
 def jobs_api():
-
+    
     try:
         job = request.get_json(force=True)
     except Exception as e:
