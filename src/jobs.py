@@ -1,14 +1,18 @@
 import csv
 from hotqueue import HotQueue
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
 import folium
 import uuid
 from redis import Redis
 
-rd = redis.Redis(host='redis-db', port=6379, db=0)
-q = hotqueue.HotQueue('queue', host='redis-db', port=6379, db=1)
+redis_ip = os.environ.get('REDIS_IP')
+if not redis_ip:
+    raise Exception()
+
+rd = redis.Redis(host=redis_ip, port=6379, db=0)
+q = hotqueue.HotQueue('queue', host=redis_ip, port=6379, db=1)
 rd2 = redis.Redis(host='redis-db', port=6379, db=2)
 
 # MISCELLANEOUS 
@@ -237,7 +241,7 @@ def create_all_coords(full_data_json:dict) -> list:
             continue
     return(coordinate_list)
 
-def create_map(full_data_json:dict) -> file:
+def create_map(full_data_json:dict):
     '''
         This function creates a map of the world and places markers on each country
         that has launched spacebound rockets. These markers display how many launches
@@ -261,4 +265,44 @@ def create_map(full_data_json:dict) -> file:
 
     world_map.save("map.html")
 
+def country_spending_bar_graph(full_data_json:dict):
+    cost_data = {}
+    for item in full_data_json['launches']: 
+        address = item['Location']
+        last_comma_index = address.rfind(",")
+        country = address[last_comma_index + 2:]
+        
+        # Correct launch sites to the spending country
+        if country == 'Gran Canaria':
+            country = 'USA'
+        elif country == 'Yellow Sea':
+            country = 'China'
+        elif country == 'Kazakhstan':
+            country = 'Russia'
+        elif country == 'Pacific Missile Range Facility':
+            country = 'USA'
 
+        # sort spending into countries. if country isnt in dict, add it
+        if country in cost_data:
+            try:
+                cost_data[country] += float(item['Price'])
+            except:
+                continue
+        else:
+            try:
+                cost_data[country] = float(item['Price'])
+            except:
+                continue
+    countries = list(cost_data.keys())
+    costs = list(cost_data.values())
+
+    fig = plt.figure(figsize = (10, 5))
+
+    plt.bar(countries, costs, color='maroon',width = 0.4)
+
+    plt.xlabel('Countries')
+    plt.ylabel('Total Space Launch Spending in Millions USD')
+    plt.title('Total Space Launch Spending of Different Countries')
+
+    plt.savefig('spending_bar.png')
+    
