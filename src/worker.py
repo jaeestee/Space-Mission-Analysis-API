@@ -23,7 +23,7 @@ def execute_job(item: str) -> dict:
     update_job_status(current_jid, 'in progress')
 
     # ACQUIRE JOB'S DICTIONARY OBJECT
-    current_job = rd.hget(current_jid)
+    current_job = json.loads(rd.get(current_jid))
 
     # PRASE THE ROUTE INTO USABLE VARIABLES
     current_route = current_job['route'] # full route, e.g., '/jobs/names-by-org/'
