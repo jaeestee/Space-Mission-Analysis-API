@@ -1,6 +1,6 @@
-from hotqueue import HotQueue
-from geopy.geocoders import Nominatim
-from redis import Redis
+#from hotqueue import HotQueue
+#from geopy.geocoders import Nominatim
+#from redis import Redis
 from jobs import *
 
 @q.worker
