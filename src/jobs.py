@@ -9,6 +9,9 @@ from redis import Redis
 
 rd = redis.Redis(host='redis-db', port=6379, db=0)
 q = hotqueue.HotQueue('queue', host='redis-db', port=6379, db=1)
+rd2 = redis.Redis(host='redis-db', port=6379, db=2)
+
+# MISCELLANEOUS 
 
 def get_launches_data() -> dict:
     '''
@@ -30,6 +33,8 @@ def get_launches_data() -> dict:
             data['launches'].append(dict(row))
 
     return(data)
+
+# JOB HANDLING
 
 def generate_jid():
     """
@@ -59,11 +64,11 @@ def save_job(job_key, job_dict):
     rd.hset(job_key, job_dict)
 
 def queue_job(jid):
-    """Add a job to the redis queue."""
+    """Add a job id to the redis queue."""
     q.put(jid)
 
 def add_job(route, status="submitted"):
-    """Add a job to the redis queue."""
+    """Fully add a job to the redis queue and save to redis history."""
     jid = generate_jid()
     job_dict = instantiate_job(jid, route, status)
     save_job(jid, job_dict)
@@ -72,12 +77,15 @@ def add_job(route, status="submitted"):
 
 def update_job_status(jid, status):
     """Update the status of job with job id `jid` to status `status`."""
+
     job = rd.hget(jid)
     if job:
         job['status'] = status
         save_job(generate_job_key(jid), job)
     else:
         raise Exception()
+
+# JOB RELATED
 
 def populate_launch_data():
     data = {}
@@ -88,7 +96,6 @@ def populate_launch_data():
         for row in reader:
             data['launches'].append(dict(row))
     return(data)
-# q = HotQueue("queue", host="10.233.38.133", port=6379, db=1)
 
 def get_data() -> dict:
     """
@@ -110,7 +117,7 @@ def get_data() -> dict:
 
     return redisData
 
-def get_rocket_names_by_org(full_data_json:dict,org_name:str) -> list:
+def get_rocket_names_by_org(full_data_json:dict, org_name:str) -> list:
     '''
         This function gets a list of all the rockets launched by an organization.
 
@@ -128,7 +135,7 @@ def get_rocket_names_by_org(full_data_json:dict,org_name:str) -> list:
 
     return(rocket_names)
 
-def get_total_cost_for_org(full_data_json:dict,org_name:str) -> float:
+def get_total_cost_for_org(full_data_json:dict, org_name:str) -> float:
     '''
         This function calculates the total amount of money in millions USD that
         an organization has spent on all of their launches.

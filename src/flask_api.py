@@ -1,7 +1,7 @@
 from flask import Flask, request, send_file
 import requests, redis, json
 import os
-import matplotlib.pyplot as plt
+import jobs as j 
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
@@ -47,6 +47,15 @@ def post_data() -> str:
     message = 'Successfully reloaded the dictionary with the data from the web!\n'
 
     return message
+
+@app.route('/jobs', methods=['POST'])
+def jobs_api():
+
+    try:
+        job = request.get_json(force=True)
+    except Exception as e:
+          return True, json.dumps({'status': "Error", 'message': 'Invalid JSON: {}.'.format(e)})
+    return json.dumps(j.add_job(job['route'], job['status']))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
