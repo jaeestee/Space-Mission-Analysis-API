@@ -9,7 +9,7 @@ services:
         volumes:
             - ./data:/data
         user: "1000:1000"
-    flask-app:
+    api:
         build:
             context: ./
             dockerfile: ./Dockerfile.api
@@ -29,8 +29,6 @@ services:
         depends_on:
             - redis-db
         image: jaeestee/space_mission_analysis:wrk
-        ports:
-            - 5000:5000
         volumes:
             - ./config.yaml:/config.yaml
         environment:
