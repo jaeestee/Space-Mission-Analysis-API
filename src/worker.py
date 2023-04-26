@@ -59,7 +59,7 @@ def execute_job(item: str) -> dict:
         return '\n Could not parse a proper function from the route provided.'
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
-    rd2.set(current_jid, result)
+    rd2.set(current_jid, json.dumps(result))
 
     update_job_status(current_jid, 'completed')
 
