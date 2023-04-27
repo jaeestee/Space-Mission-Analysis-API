@@ -35,17 +35,8 @@ def execute_job(item: str) -> dict:
     current_job = json.loads(rd.get(current_jid))
 
     # PRASE THE ROUTE INTO USABLE VARIABLES
-    current_route = current_job['route'] # full route, e.g., '/jobs/names-by-org/'
+    function = current_job['route'] # full route, e.g., '/jobs/names-by-org/'
 
-    #args = current_route.split('/')
-    
-    ####TESTING####
-    rd2.set(current_jid, current_route)
-    update_job_status(current_jid, 'completed')
-    
-    #function = args[1] # second part of the route, e.g., '/names-by-org'
-    function = current_route
-    
     # EXECUTE FUNCTION IN ROUTE
     full_data = get_data()
     result = []
@@ -64,12 +55,6 @@ def execute_job(item: str) -> dict:
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
     rd2.set(current_jid, json.dumps(result))
-
     update_job_status(current_jid, 'completed')
-
-    # RETURN THE NEW JOB DICTIONARY OBJECT
-    #new_job = rd.hget(current_jid)
-
-    #return new_job
 
 execute_job()
