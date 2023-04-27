@@ -110,7 +110,7 @@ curl -X POST http://localhost:5000/jobs/<ROUTE>
 ```
 
 ### Endpoints
-|Route|Method|What it should do|Easy Navigation|
+|Route|Method|What it should do|
 |---|---|---|
 |``/data``|POST|Loads in the data.|
 |``/data``|DELETE|Deletes the data.|
