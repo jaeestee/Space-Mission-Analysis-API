@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
 from redis import Redis
-'''
+
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
     raise Exception()
@@ -12,7 +12,7 @@ if not redis_ip:
 rd = Redis(host = redis_ip, port=6379, db=0)
 q = HotQueue('queue', host = redis_ip, port = 6379, db=1)
 rd2 = Redis(host = redis_ip, port=6379, db=2)
-'''
+
 def get_launches_data() -> dict:
     '''
         This function pulls the full data csv from the current directory and formats
@@ -117,11 +117,6 @@ def list_of_jobs():
     return jobsList
         
 # JOB RELATED
-
-def get_orgs() -> list:
-    """
-    
-    """
 
 def get_data() -> dict:
     """
