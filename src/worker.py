@@ -37,7 +37,7 @@ def execute_job(item: str) -> dict:
     # PASS THE ROUTE INTO USABLE VARIABLES
     current_route = current_job['route'] # full route, e.g., '/get-rockets-by-org/org'
 
-    args = current_route.split('/') 
+    args = current_route.split('-') 
     function = args[0] # the 'get-rockets-by-org'
     
     # EXECUTE FUNCTION IN ROUTE
@@ -51,7 +51,7 @@ def execute_job(item: str) -> dict:
         result = 'The data does not exist, make sure to POST the data!'
         status = 'incompleted'
     else:
-        if function == 'get-rockets-by-org':
+        if function == 'get rockets by org':
             result = get_rocket_names_by_org(full_data, args[1])
         elif function == 'total-cost-by-org':
             result = get_total_cost_for_org(full_data, args[1])
