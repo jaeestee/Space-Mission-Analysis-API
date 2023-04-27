@@ -44,6 +44,9 @@ def execute_job(item: str) -> dict:
     full_data = get_data()
     result = []
 
+    # SETTING THE STATUS TO COMPLETED NOW SO THAT THIS LINE DOESN'T HAVE TO BE IN EVERY SINGLE IF STATEMENT
+    status = 'completed'
+    
     if function == 'get-rockets-by-org':
         result = get_rocket_names_by_org(full_data, args[1])
     elif function == 'total-cost-by-org':
@@ -53,11 +56,11 @@ def execute_job(item: str) -> dict:
     elif function == 'list-all-active-rockets':
         result = list_active_rockets(full_data)
     else: 
-        result = update_job_status(current_jid, 'uncompleted')
-        rd2.set(current_jid, 'Could not parse a proper function from the route provided.\n')
+        status = 'incompleted' # changes to incompleted if the route doesn't exist
+        result = 'Could not parse a proper function from the route provided.\n'
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
     rd2.set(current_jid, json.dumps(result))
-    update_job_status(current_jid, 'completed')
+    update_job_status(current_jid, status)
 
 execute_job()
