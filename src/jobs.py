@@ -127,9 +127,9 @@ def get_data() -> dict:
         #un-seralizing the string into a dictionary
         redisData = json.loads(rd2.get('data'))
     except NameError:
-        return 'The data does not exist...\n'
+        return 'The data does not exist.'
     except TypeError:
-        return 'The data does not exist...\n'
+        return 'The data does not exist.'
 
     return redisData
 
