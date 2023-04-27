@@ -71,7 +71,11 @@ def execute_job(item: str) -> dict:
             result = 'Could not parse a proper function from the route provided.'
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
-    rd2.set(current_jid, json.dumps(result))
-    update_job_status(current_jid, status)
+    if function != 'map-of-launches':
 
+        rd2.set(current_jid, json.dumps(result))
+        update_job_status(current_jid, status)
+    else:
+        rd2.set(current_jid, result)
+        update_job_status(current_jid,status)
 execute_job()
