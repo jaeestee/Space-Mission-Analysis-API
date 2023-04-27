@@ -108,3 +108,15 @@ To add a job to the job queue, run the following command with a route from the /
 ```
 curl -X POST http://localhost:5000/jobs/<ROUTE>
 ```
+
+### Endpoints
+|Route|Method|What it should do|Easy Navigation|
+|---|---|---|---|
+|``/data``|POST|Loads in the data.|[Click Me]()|
+|``/data``|DELETE|Deletes the data.|[Click Me]()|
+|``/data``|GET|Prints the data.|[Click Me]()|
+|``/jobs``|GET|Prints the jobs.|[Click Me]()|
+|``/jobs/<job_id>``|GET|Prints a specific job.|[Click Me]()|
+|``/jobs/<route>``|POST|Posts a job to be executed.|[Click Me]()|
+|``/jobs/clear``|DELETE|Deletes the current list of jobs.|[Click Me]()|
+|``/help``|GET|Gets the help message.|[Click Me]()|
