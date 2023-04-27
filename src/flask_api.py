@@ -1,5 +1,6 @@
 from flask import Flask, request, send_file
-import requests, json, os
+import requests, json
+import os
 import jobs as j 
 from redis import Redis
 from hotqueue import HotQueue
@@ -32,61 +33,36 @@ def delete_data() -> str:
 @app.route('/data', methods=['POST'])
 def post_data() -> str:
     """
-    This function gets the launch data and posts it to the rd2 redis database.
+    This function adds the DATA dictionary object with the data from the web and returns
+    a success message.
 
     Returns:
         message (str): Message saying that the data was successfully reloaded.
     """
 
-    #pulling the data using the function from jobs.py
     data = j.get_launches_data()
 
-    #stores the data into the redis client
+    #stores the data into the redis client, but as a serialized dictionary string
     rd2.set('data', json.dumps(data))
 
     #the success message
-    message = 'Successfully reloaded the dictionary with the data from the web!\n'
+    message = 'Successfully loaded in the dictionary.\n'
+
     return message
 
 @app.route('/jobs', methods=['GET'])
-def get_list_of_jobs() -> list:
-    """
-    This function returns the list of current jobs that the user has queried to the api.
-    It contains the job ID, the route that the user requested, and the status of the job.
-    
-    Returns:
-        jobsList (list): The list of current jobs.
-    """
-    
+def get_list_of_jobs():
+
     jobsList = j.list_of_jobs()
     return jobsList
 
 @app.route('/jobs/<string:route>', methods=['POST'])
-def post_job(route: str) -> str:
-    """
-    This function adds a job that the user requested into the jobs queue. Then it will
-    return a success message.
-    
-    Returns:
-        message (str): The success message.
-    """
-    
-    #sends the route that the user requested to jobs.py and it takes care of the rest
+def post_job(route: str) -> dict:
     j.add_job(route)
-    message = 'Successfully queued a job! \nTo view the status of the job, curl /jobs.\n'
-    return message
+    return 'Successfully queued a job! \nTo view the status of the job, curl /jobs.\n'
 
 @app.route('/jobs/<string:jid>', methods=['GET'])
 def get_job(jid: str) -> dict:
-    """
-    This function returns the results of a specific job using its job ID. If the job ID is
-    invalid, it will return a falure message.
-    
-    Returns:
-        results (dict): The results of the job from the rd2 redis database.
-        error message (str): An error message saying that the job ID is invalid.
-    """
-    
     try:
         results = rd2.get(jid)
     except TypeError:
@@ -96,17 +72,10 @@ def get_job(jid: str) -> dict:
 
 @app.route('/jobs/clear', methods=['DELETE'])
 def clear_jobs() -> str:
-    """
-    This function clears the list of jobs in case the user wanted a fresh jobs list.
-    Returns a success message.
-    
-    Returns:
-        message (str): The success message.
-    """
     
     rd.flushdb()
-    message = 'Successfully cleared the jobs list!\n'
-    return message
+    
+    return 'Successfully cleared the jobs list!\n'
 
 @app.route('/help', methods=['GET'])
 def help() -> str:
