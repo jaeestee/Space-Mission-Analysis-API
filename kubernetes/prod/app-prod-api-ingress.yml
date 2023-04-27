@@ -17,4 +17,4 @@ spec:
             service:
               name: prod-api-nodeport-service
               port:
-                  number: 32337
+                  number: 30312
