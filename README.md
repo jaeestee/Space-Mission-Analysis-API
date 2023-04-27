@@ -272,3 +272,7 @@ curl -X POST http://localhost:5000/jobs/<ROUTE>
 |``/jobs/<route>``|POST|Posts a job to be executed.|
 |``/jobs/clear``|DELETE|Deletes the current list of jobs.|
 |``/help``|GET|Gets the help message.|
+
+# Describing the Space Missions Analysis Data:
+This data contains most space mission launches from 1957 to 2020 by various organizations like SpaceX, CASC, Rocket Lab, and others. It provides data on each rocket’s organization, where it was launched, location of the launch, date and time of launch, whether the rocket is active or retired, how much it cost, and the status of the mission.
+> From the [Kaggle Data Set](https://www.kaggle.com/datasets/sefercanapaydn/mission-launches?resource=download)
