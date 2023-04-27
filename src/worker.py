@@ -48,7 +48,7 @@ def execute_job(item: str) -> dict:
     status = 'completed'
     
     if full_data == 'The data does not exist.':
-        results = 'The data does not exist, make sure to POST the data!'
+        result = 'The data does not exist, make sure to POST the data!'
         status = 'incompleted'
     else:
         if function == 'get-rockets-by-org':
