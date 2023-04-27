@@ -85,12 +85,18 @@ def queue_job(jid):
 def add_job(route):
     """
     Fully creates the job ID and information regarding the job. Then it
-    makes the status into submitted, and saves and queues the job.
+    makes the status into submitted, and saves and queues the job. It returns the
+    job ID so that it can be sent to the user during the success message.
+    
+    Returns:
+        jid (str): The job ID.
     """
     jid = generate_jid()
     job_dict = instantiate_job(jid, route, "submitted")
     save_job(jid, job_dict)
     queue_job(jid)
+    
+    return jid
 
 def update_job_status(jid, status):
     """
