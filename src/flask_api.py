@@ -89,22 +89,30 @@ def help() -> str:
 
     helpOutput = '''usage: curl -X [COMMAND] localhost:5000/<ROUTE>\n
 Different COMMANDS: 
-    GET                                 Responsible for returning any data. 
-    POST                                Responsible for generating any data. 
-    DELETE                              Responsible for deleting any data. 
+    GET                                   Responsible for returning any data. 
+    POST                                  Responsible for generating any data. 
+    DELETE                                Responsible for deleting any data. 
 
 GET routes:
-    /jobs                               Returns list of all previous jobs.
-    /jobs/<string:JOB_ID>               Returns specific job given job's id.
-    /help                               Returns the help text that describes each route
+    /jobs                                 Returns list of all previous jobs.
+    /jobs/<string:JOB_ID>                 Returns specific job given job's id.
+    /help                                 Returns the help text that describes each route
     
 POST routes:
-    /data                               Updates the current variable data with the current .csv.
-    /jobs/<string:ROUTE>                Queues a job specified by ROUTE, and completes it.
+    /data                                 Updates the current variable data with the current .csv.
+    /jobs/<string:ROUTE>                  Queues a job specified by ROUTE, and completes it.
 
 DELETE routes:
-    /data                               Deletes all of the launch mission data.
-    /jobs/clear                         Clears the current list of jobs.
+    /data                                 Deletes all of the launch mission data.
+    /jobs/clear                           Clears the current list of jobs.
+    
+Different job routes:
+    /jobs/'get_rockets_by_org-<ORGNAME>'  Get all the rocket names for a specific ORGNAME.
+    /jobs/'total_cost_by_org-<ORGNAME>'   Get the total cost that an ORGNAME has spent.
+    /jobs/'map_of_launches'               Creates a map of all the locations that a rocket has been launched.
+    /jobs/'list_all_active_rockets'       Returns the list of all active rockets currently.
+    /jobs/'data'                          Returns all the data.
+    /jobs/'get_orgs'                      Returns a list of all the organizations in the data.
 '''
     
     return helpOutput
