@@ -37,6 +37,9 @@ def execute_job(item: str) -> dict:
     # PASS THE ROUTE INTO USABLE VARIABLES
     current_route = current_job['route'] # full route, e.g., '/get_rockets_by_org-org'
 
+    # INITIALIZING ARGS
+    args = []
+    
     # THIS CHECKS TO MAKE SURE IF IT HAS ANOTHER ELEMENT TO THE QUERY
     if '-' in current_route:
         args = current_route.split('-') 
@@ -58,9 +61,9 @@ def execute_job(item: str) -> dict:
         result = 'The data does not exist, make sure to POST the data!'
         status = 'incompleted'
     else:
-        if function == 'get_rockets_by_org' and args.len() == 2:
+        if function == 'get_rockets_by_org' and len(args) == 2:
             result = get_rocket_names_by_org(full_data, args[1])
-        elif function == 'total_cost_by_org' and args.len() == 2:
+        elif function == 'total_cost_by_org' and len(args) == 2:
             result = get_total_cost_for_org(full_data, args[1])
         elif function == 'map_of_launches':
             result = create_map(full_data)
