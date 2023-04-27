@@ -47,13 +47,168 @@ And the codebase can be setup quickly using the next command:
 docker-compose up
 ```
 
-## Kubernetes
-
-The `kubernetes` folder contains the Kubernetes deployment files. If the user wishes to setup a kubernetes cluster use the following command on each file to deploy it:
-
+# Kubernetes Cluster:
+## Setting Up The Cluster:
+To set up the cluster, first run these commands while in the `kubernetes/prod` directory:
+```bash
+$ kubectl apply -f app-prod-api-deployment.yml
+$ kubectl apply -f app-prod-api-ingress.yml
+$ kubectl apply -f app-prod-api-nodeport.yml
+$ kubectl apply -f app-prod-db-deployment.yml
+$ kubectl apply -f app-prod-db-pvc.yml
+$ kubectl apply -f app-prod-db-service.yml
+$ kubectl apply -f app-prod-wrk-deployment.yml
 ```
-kubectl apply -f <YML_FILE>
+> The deployment-python-debug.yml will be used to test whether the cluster is functioning correctly
+
+Next, use this command to make sure everything is now running properly:
+```bash
+$ kubectl get pods
 ```
+
+The output should look similar to this:
+```
+NAME                                    READY   STATUS    RESTARTS   AGE
+jo25672-test-geneapi-67b8c5b8d4-hcg8s   1/1     Running   0          18m
+jo25672-test-geneapi-67b8c5b8d4-w5f2w   1/1     Running   0          17m
+jo25672-test-redis-5678f8fd88-6njvq     1/1     Running   0          16m
+py-debug-deployment-f484b4b99-tprrp     1/1     Running   0          17m
+```
+> IMPORTANT: Make sure that the status all say Running, else something failed. If it seems to be building, give it some time and try the command again.
+
+Now everything is set up!
+
+
+## Testing the Kubernetes Cluster:
+To test the cluster and make sure the flask api is functioning properly, use this command to enter the python pod:
+```bash
+$ kubectl exec -it <py-debug-deployment pod name> -- /bin/bash
+```
+> IMPORTANT: Make sure to copy and paste the pod name from the pods list that you got earlier.
+> Example:
+> ```bash
+> $ kubectl exec -it py-debug-deployment-f484b4b99-tprrp -- /bin/bash
+> ```
+
+If done properly, the command line should change to something like this:
+```bash
+root@py-debug-deployment-f484b4b99-tprrp:/#
+```
+
+Now you can curl using the queries below in the **Queries To Use** section. Just make sure to have the ```localhost``` swapped with ```jo25672-test-geneapi-service```.
+For example:
+```bash
+root@py-debug-deployment-f484b4b99-tprrp:/# curl jo25672-test-geneapi-service:5000/genes
+```
+
+
+## Creating Your Own Image for K8:
+To build a new image from the **Dockerfile** present in this directory, run this command:
+```
+$ docker build -t <dockerhubusername>/gene_api:hw8 .
+```
+> **IMPORTANT: Make sure to be in the same directory as the ``Dockerfile`` and DO NOT FORGET THE "." at the very end of this command!!!**
+
+If done properly, the output should look similar to this:
+```
+Sending build context to Docker daemon  19.46kB
+Step 1/6 : FROM python:3.8.10
+ ---> a369814a9797
+Step 2/6 : RUN pip install Flask==2.2.2
+ ---> Using cache
+ ---> bbf69ba6f74f
+Step 3/6 : RUN pip install requests==2.22.0
+ ---> Using cache
+ ---> 4ffa49d19ef5
+Step 4/6 : RUN pip install redis==4.5.1
+ ---> Using cache
+ ---> c5c9cd8cc964
+Step 5/6 : COPY gene_api.py /gene_api.py
+ ---> 06dc8f8ebd53
+Step 6/6 : CMD ["python", "gene_api.py"]
+ ---> Running in b7b7f007b29f
+Removing intermediate container b7b7f007b29f
+ ---> 2a2936689823
+Successfully built 2a2936689823
+Successfully tagged jaeestee/gene_api:hw8
+```
+Now you have successfully created your own image!
+
+
+## Pushing the New Image for K8:
+Now that your own image was created, it must be pushed for the Kubernetes Cluster to function properly. To do so, use this command:
+```bash
+$ docker push <dockerhubusername>/gene_api:hw8
+```
+
+If done properly, the output should look similar to this:
+```
+The push refers to repository [docker.io/jaeestee/gene_api]
+b7441079a5eb: Layer already exists
+739f6e8204e4: Layer already exists
+e91a4bead186: Layer already exists
+43b09f4e921f: Layer already exists
+6ab97ebc930b: Layer already exists
+e726038699f2: Layer already exists
+b8e0cb862793: Layer already exists
+4b4c002ee6ca: Layer already exists
+cdc9dae211b4: Layer already exists
+7095af798ace: Layer already exists
+fe6a4fdbedc0: Layer already exists
+e4d0e810d54a: Layer already exists
+4e006334a6fd: Layer already exists
+hw8: digest: sha256:a722680b5e6dff7fac131dc8128bc1563700e88c67d7c617745ed227b2f066a1 size: 3057
+```
+
+
+## Editing a File for K8:
+Since you have your own image now, you need to edit the ```jo25672-test-geneapi-deployment.yml``` file. To do this, enter into any text editing command like this:
+```bash
+$ emacs jo25672-test-geneapi-deployment.yml
+```
+
+If done properly, the window should look like this:
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jo25672-test-geneapi
+  labels:
+    app: jo25672-test-geneapi
+    username: jo25672
+    env: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jo25672-test-geneapi
+  template:
+    metadata:
+      labels:
+        app: jo25672-test-geneapi
+        username: jo25672
+        env: test
+    spec:
+      containers:
+        - name: jo25672-test-geneapi
+          imagePullPolicy: Always
+          image: jaeestee/gene_api:hw8
+          env:
+          - name: FLASK_APP
+            value: "gene_api.py"
+          - name: REDIS_IP
+            value: jo25672-test-redis-service
+          ports:
+          - name: http
+            containerPort: 5000
+```
+
+Now, go all the way to the bottom where it says "image: jaeestee/gene_api:hw8" and make sure that the ```jaeestee``` is switched with your own dockerhub username.
+To save the file in ```emacs```, press ```Ctrl+X``` and then ```Ctrl+C```, where it will prompt you to save. Simply press ```y``` on the keyboard.
+
+You have now completed making your own image for the K8 cluster!
+
 
 ## Run Instructions
 
