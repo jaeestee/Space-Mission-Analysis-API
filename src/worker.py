@@ -58,9 +58,9 @@ def execute_job(item: str) -> dict:
         result = 'The data does not exist, make sure to POST the data!'
         status = 'incompleted'
     else:
-        if function == 'get_rockets_by_org':
+        if function == 'get_rockets_by_org' and args.len() == 2:
             result = get_rocket_names_by_org(full_data, args[1])
-        elif function == 'total_cost_by_org':
+        elif function == 'total_cost_by_org' and args.len() == 2:
             result = get_total_cost_for_org(full_data, args[1])
         elif function == 'map_of_launches':
             result = create_map(full_data)
