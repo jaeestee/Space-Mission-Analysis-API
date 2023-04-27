@@ -1,13 +1,9 @@
-import csv
+import csv, folium, uuid, os, json
 from hotqueue import HotQueue
 import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
-import folium
-import uuid
 from redis import Redis
-import os
-import json
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
@@ -16,8 +12,6 @@ if not redis_ip:
 rd = Redis(host = redis_ip, port=6379, db=0)
 q = HotQueue('queue', host = redis_ip, port = 6379, db=1)
 rd2 = Redis(host = redis_ip, port=6379, db=2)
-
-# MISCELLANEOUS 
 
 def get_launches_data() -> dict:
     '''
@@ -42,23 +36,33 @@ def get_launches_data() -> dict:
 
 # JOB HANDLING
 
-def generate_jid():
+def generate_jid() -> str:
     """
-      Generate a pseudo-random identifier for a job.
+      Generate a pseudo-random identifier for a job and returns it.
+      
+      Returns:
+          randomID (str): A random job ID.
     """
-    return str(uuid.uuid4())
+    
+    randomID = str(uuid.uuid4())
+    return randomID
 
 def generate_job_key(jid):
     """
       Generate the redis key from the job id to be used when storing, retrieving or updating
       a job in the database.
+      
+      Returns:
+          jid (str): The jobID to be used for the redis key.
     """
     return '{}'.format(jid)
 
 def instantiate_job(jid, route, status):
     """
-      Create the job object description as a python dictionary. Requires the job id, status,
-      start and end parameters.
+      Create the job object description as a python dictionary. Requires the job id, route, and status.
+      
+      Return:
+          (dict): The job object description.
     """
     return {'id': jid,
             'route': route,
@@ -66,25 +70,31 @@ def instantiate_job(jid, route, status):
     }
 
 def save_job(job_key, job_dict):
-    """Save a job object in the Redis database."""
+    """
+    Save a job object in the rd Redis database.
+    """
     rd.set(job_key, json.dumps(job_dict))
 
 def queue_job(jid):
-    """Add a job id to the redis queue."""
+    """
+    Adds a job id to the redis queue.
+    """
     q.put(jid)
 
 def add_job(route):
-    """Fully add a job to the redis queue and save to redis history."""
-
+    """
+    Fully creates the job ID and information regarding the job. Then it
+    makes the status into submitted, and saves and queues the job.
+    """
     jid = generate_jid()
     job_dict = instantiate_job(jid, route, "submitted")
     save_job(jid, job_dict)
     queue_job(jid)
 
-    return job_dict
-
 def update_job_status(jid, status):
-    """Update the status of job with job id `jid` to status `status`."""
+    """
+    Update the status of job with job id `jid` to status `status`.
+    """
 
     job = json.loads(rd.get(jid))
     if job:
@@ -94,7 +104,12 @@ def update_job_status(jid, status):
         raise Exception()
 
 def list_of_jobs():
+    """
+    This function creates a list of jobs that is in an easily returnable state.
     
+    Returns:
+        jobsList (list): The list of current jobs queued by the user.
+    """
     jobsList = []
     for key in rd.keys():
         jobsList.append(json.loads(rd.get(key.decode('utf-8'))))
