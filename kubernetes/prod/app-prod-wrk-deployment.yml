@@ -18,7 +18,7 @@ spec:
       containers:
         - name: prod-wrk
           imagePullPolicy: Always
-          image: jaeestee/space_mission_analysis:worker
+          image: jaeestee/space_mission_analysis:wrk
           env:
           - name: WORKER
             value: "worker.py"
