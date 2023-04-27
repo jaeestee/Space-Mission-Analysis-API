@@ -65,10 +65,11 @@ def post_job(route: str) -> dict:
 def get_job(jid: str) -> dict:
     try:
         results = rd2.get(jid)
+        return results
+
     except TypeError:
         return 'The job ID is invalid, please try again.\n'
         
-    return results
 
 @app.route('/jobs/clear', methods=['DELETE'])
 def clear_jobs() -> str:
