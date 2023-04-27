@@ -38,7 +38,11 @@ def execute_job(item: str) -> dict:
     current_route = current_job['route'] # full route, e.g., '/jobs/names-by-org/'
 
     #args = current_route.split('/')
-
+    
+    ####TESTING####
+    rd2.set(current_jid, current_route)
+    update_job_status(current_jid, 'completed')
+    
     #function = args[1] # second part of the route, e.g., '/names-by-org'
     function = current_route
     
