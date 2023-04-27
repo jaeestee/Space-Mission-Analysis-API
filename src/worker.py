@@ -64,8 +64,10 @@ def execute_job(item: str) -> dict:
     update_job_status(current_jid, 'completed')
 
     # RETURN THE NEW JOB DICTIONARY OBJECT
-    new_job = rd.hget(current_jid)
+    #new_job = rd.hget(current_jid)
 
-    return new_job
+    #return new_job
 
-execute_job()
+if __name__ == '__main__':
+    jid = q.get()
+    execute_job(jid)
