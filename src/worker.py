@@ -43,6 +43,9 @@ def execute_job(item: str) -> dict:
     # EXECUTE FUNCTION IN ROUTE
     full_data = get_data()
     result = []
+    
+    # AS SPACES AREN'T ALLOWED IN THE TERMINAL, THIS IS A WORKAROUND FOR IT
+    args[1] = args[1].replace('_', ' ')
 
     # SETTING THE STATUS TO COMPLETED NOW SO THAT THIS LINE DOESN'T HAVE TO BE IN EVERY SINGLE IF STATEMENT
     status = 'completed'
