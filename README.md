@@ -51,7 +51,6 @@ $ docker images
 > jaeestee/space_mission_analysis          wrk       d8376d24fa21   1 hours ago     887MB
 > ```
 
-
 ## Running the image:
 To start running the containerized Flask app, run this command:
 ```bash
@@ -170,6 +169,26 @@ jo25672-test-redis-5678f8fd88-6njvq     1/1     Running   0          16m
 py-debug-deployment-f484b4b99-tprrp     1/1     Running   0          17m
 ```
 > IMPORTANT: Make sure that the status all say Running, else something failed. If it seems to be building, give it some time and try the command again.
+
+Next, use this command to get the service port number:
+```bash
+$ kubectl get services
+```
+
+The output should look like this:
+```
+NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+prod-api-nodeport-service   NodePort    10.233.3.111    <none>        5000:30312/TCP   98m
+prod-redis-service          ClusterIP   10.233.17.157   <none>        6379/TCP         98m
+```
+> The `30312` is the number we need! When you build a new k8 cluster, this number will always change!!!
+
+Lastly, edit the `app-prod-api-ingress.yml`:
+```bash
+$ emacs app-prod-api-ingress.yml
+```
+
+Get to the bottom of the file where it says `number: <number>` and replace it with the new service port number!
 
 Now everything is set up!
 
@@ -399,3 +418,7 @@ curl -X GET http://localhost:5000/jobs/'<job ID>'
 # Describing the Space Missions Analysis Data:
 This data contains most space mission launches from 1957 to 2020 by various organizations like SpaceX, CASC, Rocket Lab, and others. It provides data on each rocket’s organization, where it was launched, location of the launch, date and time of launch, whether the rocket is active or retired, how much it cost, and the status of the mission.
 > From the [Kaggle Data Set](https://www.kaggle.com/datasets/sefercanapaydn/mission-launches?resource=download)
+
+
+## IMPORTANT
+Make sure to download the file from kaggle and import it into the src directory.
