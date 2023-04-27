@@ -33,8 +33,103 @@ The `jobs.py` file contains helper functions to manage job queues. It contains t
 
 The `worker.py` file contains code to run background jobs.
 
-## Docker
+# Docker/Image Handling
+## Pulling the image ```jaeestee/space_mission_analysis:api``` and ```jaeestee/space_mission_analysis:wrk``` from Docker Hub:
+To pull the existing image, run this command:
+```bash
+$ docker pull jaeestee/space_mission_analysis:api
+$ docker pull jaeestee/space_mission_analysis:wrk
+```
+If done properly, the images should show when running this command:
+```bash
+$ docker images
+```
+> The output should look similar to this:
+> ```
+> REPOSITORY                               TAG       IMAGE ID       CREATED         SIZE
+> jaeestee/space_mission_analysis          api       d8376d24fa21   1 hours ago     887MB
+> jaeestee/space_mission_analysis          wrk       d8376d24fa21   1 hours ago     887MB
+> ```
 
+
+## Running the image:
+To start running the containerized Flask app, run this command:
+```bash
+$ docker-compose up -d
+```
+> Remember that the docker-compose.yml file must exist in the same folder for this to work!
+If done properly, the output should look similar to this:
+```
+Creating network "docker_default" with the default driver
+Creating docker_redis-db_1 ... done
+Creating docker_worker_1   ... done
+Creating docker_api_1      ... done
+```
+Now the app is running!
+> **IMPORTANT: This does not have to be running on a separate tab since it is running in the background using the ``-d`` command!!!**
+
+To check that the application is running, run this command:
+```bash
+$ docker ps
+```
+If the application is running properly, the output should look similar to this:
+```
+CONTAINER ID   IMAGE               COMMAND                  CREATED         STATUS        PORTS                                       NAMES
+0e43d90f16d0   jaeestee/space_mission_analysis:api   "python flask_api.py"    10 seconds ago   Up 10 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   docker_api_1
+d9598bf75d5b   jaeestee/space_mission_analysis:wrk   "python worker.py"       10 seconds ago   Up 10 seconds   0.0.0.0:5001->5001/tcp, :::5001->5001/tcp   docker_worker_1
+e9d71c477178   redis:7                               "docker-entrypoint.s…"   11 seconds ago   Up 10 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   docker_redis-db_1
+```
+> If not, the output should look similar to this:
+> ```
+> CONTAINER ID   IMAGE               COMMAND                  CREATED         STATUS        PORTS                                       NAMES
+> ```
+
+To stop the application from running in the background, run this command:
+```bash
+$ docker-compose down
+```
+If done properly, the output should look similar to this:
+```
+Stopping docker_worker_1   ... done
+Stopping docker_api_1      ... done
+Stopping docker_redis-db_1 ... done
+Removing docker_worker_1   ... done
+Removing docker_api_1      ... done
+Removing docker_redis-db_1 ... done
+Removing network docker_default
+```
+
+## Building a New Image:
+To build a new image from the **Dockerfile** present in this directory, run this command:
+```
+$ docker build -t <dockerhubusername>/space_mission_analysis:<api or wrk> .
+```
+> **IMPORTANT: Make sure to be in the same directory as the ``Dockerfile`` and DO NOT FORGET THE "." at the very end of this command!!!**
+
+If done properly, the output should look similar to this:
+```
+Sending build context to Docker daemon  19.46kB
+Step 1/6 : FROM python:3.8.10
+ ---> a369814a9797
+Step 2/6 : RUN pip install Flask==2.2.2
+ ---> Using cache
+ ---> bbf69ba6f74f
+Step 3/6 : RUN pip install requests==2.22.0
+ ---> Using cache
+ ---> 4ffa49d19ef5
+Step 4/6 : RUN pip install redis==4.5.1
+ ---> Using cache
+ ---> c5c9cd8cc964
+Step 5/6 : COPY gene_api.py /gene_api.py
+ ---> 06dc8f8ebd53
+Step 6/6 : CMD ["python", "gene_api.py"]
+ ---> Running in b7b7f007b29f
+Removing intermediate container b7b7f007b29f
+ ---> 2a2936689823
+Successfully built 2a2936689823
+Successfully tagged jaeestee/gene_api:latest
+```
+Now you have successfully created your own image!
 The `docker` folder contains the Dockerfile used to build the Docker image. Also contained in here is the 'docker-compose.yml' file that can be used to setup the docker images quickly. The image is built using the following command:
 
 ```
