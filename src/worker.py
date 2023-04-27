@@ -37,10 +37,8 @@ def execute_job(item: str) -> dict:
     # PASS THE ROUTE INTO USABLE VARIABLES
     current_route = current_job['route'] # full route, e.g., '/get-rockets-by-org/org'
 
-    args = current_route.split('/') # the 'get-rockets-by-org'
-    
-    function = args[0]
-    
+    args = current_route.split('/') 
+    function = args[0] # the 'get-rockets-by-org'
     
     # EXECUTE FUNCTION IN ROUTE
     full_data = get_data()
