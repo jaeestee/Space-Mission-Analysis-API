@@ -95,17 +95,17 @@ If done properly, the command line should change to something like this:
 root@py-debug-deployment-f484b4b99-tprrp:/#
 ```
 
-Now you can curl using the queries below in the **Queries To Use** section. Just make sure to have the ```localhost``` swapped with ```jo25672-test-geneapi-service```.
+Now you can curl using the queries below in the **Queries To Use** section. Just make sure to have the ```localhost``` swapped with ```prod-api-nodeport-service```.
 For example:
 ```bash
-root@py-debug-deployment-f484b4b99-tprrp:/# curl jo25672-test-geneapi-service:5000/genes
+root@py-debug-deployment-f484b4b99-tprrp:/# curl prod-api-nodeport-service:5000/jobs
 ```
 
 
 ## Creating Your Own Image for K8:
 To build a new image from the **Dockerfile** present in this directory, run this command:
 ```
-$ docker build -t <dockerhubusername>/gene_api:hw8 .
+$ docker build -t <dockerhubusername>/space_mission_analysis:api .
 ```
 > **IMPORTANT: Make sure to be in the same directory as the ``Dockerfile`` and DO NOT FORGET THE "." at the very end of this command!!!**
 
