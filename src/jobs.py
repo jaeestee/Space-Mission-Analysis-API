@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
 from redis import Redis
+import io
 
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
@@ -333,7 +334,13 @@ def country_spending_bar_graph(full_data_json:dict):
     plt.ylabel('Total Space Launch Spending in Millions USD')
     plt.title('Total Space Launch Spending of Different Countries')
 
-    plt.savefig('spending_bar.png')
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format='png')
+
+    buffer.seek(0)
+    plot_data = buffer.getvalue()
+
+    return(plot_data)
 
 def get_organization_list(full_data_json:dict) -> list:
     '''
