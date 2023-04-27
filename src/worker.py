@@ -57,7 +57,7 @@ def execute_job(item: str) -> dict:
         result = list_active_rockets(full_data)
     else: 
         status = 'incompleted' # changes to incompleted if the route doesn't exist
-        result = 'Could not parse a proper function from the route provided.\n'
+        result = 'Could not parse a proper function from the route provided.'
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
     rd2.set(current_jid, json.dumps(result))
