@@ -51,7 +51,6 @@ $ docker images
 > jaeestee/space_mission_analysis          wrk       d8376d24fa21   1 hours ago     887MB
 > ```
 
-
 ## Running the image:
 To start running the containerized Flask app, run this command:
 ```bash
@@ -399,3 +398,7 @@ curl -X GET http://localhost:5000/jobs/'<job ID>'
 # Describing the Space Missions Analysis Data:
 This data contains most space mission launches from 1957 to 2020 by various organizations like SpaceX, CASC, Rocket Lab, and others. It provides data on each rocket’s organization, where it was launched, location of the launch, date and time of launch, whether the rocket is active or retired, how much it cost, and the status of the mission.
 > From the [Kaggle Data Set](https://www.kaggle.com/datasets/sefercanapaydn/mission-launches?resource=download)
+
+
+## IMPORTANT
+Make sure to download the file from kaggle and import it into the src directory.
