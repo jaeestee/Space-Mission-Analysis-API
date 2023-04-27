@@ -35,18 +35,22 @@ def execute_job(item: str) -> dict:
     current_job = json.loads(rd.get(current_jid))
     
     # PASS THE ROUTE INTO USABLE VARIABLES
-    current_route = current_job['route'] # full route, e.g., '/get-rockets-by-org/org'
+    current_route = current_job['route'] # full route, e.g., '/get_rockets_by_org-org'
 
-    args = current_route.split('-') 
-    function = args[0] # the 'get-rockets-by-org'
+    # THIS CHECKS TO MAKE SURE IF IT HAS ANOTHER ELEMENT TO THE QUERY
+    if '-' in current_route:
+        args = current_route.split('-') 
+        function = args[0] # the 'get_rockets_by_org'
+        
+        # AS SPACES AREN'T ALLOWED IN THE TERMINAL, THIS IS A WORKAROUND FOR IT
+        args[1] = args[1].replace('_', ' ')
+    else:
+        function = current_route
     
     # EXECUTE FUNCTION IN ROUTE
     full_data = get_data()
     result = []
     
-    # AS SPACES AREN'T ALLOWED IN THE TERMINAL, THIS IS A WORKAROUND FOR IT
-    args[1] = args[1].replace('_', ' ')
-
     # SETTING THE STATUS TO COMPLETED NOW SO THAT THIS LINE DOESN'T HAVE TO BE IN EVERY SINGLE IF STATEMENT
     status = 'completed'
     
