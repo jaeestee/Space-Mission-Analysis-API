@@ -118,6 +118,11 @@ def list_of_jobs():
         
 # JOB RELATED
 
+def get_orgs() -> list:
+    """
+    
+    """
+
 def get_data() -> dict:
     """
     This function returns the data from Redis, but only if it exists or is empty.
