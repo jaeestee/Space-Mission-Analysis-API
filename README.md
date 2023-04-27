@@ -273,6 +273,16 @@ curl -X POST http://localhost:5000/jobs/<ROUTE>
 |``/jobs/clear``|DELETE|Deletes the current list of jobs.|
 |``/help``|GET|Gets the help message.|
 
+### Different Job Routes
+|Route|Method|What it should do|
+|---|---|---|
+|``/jobs/'get_rockets_by_org-<ORGNAME>'``|POST|Queues getting rocket names by organization.|
+|``/jobs/'total_cost_by_org-<ORGNAME>'``|POST|Queues getting the total cost by organization.|
+|``/jobs/'map_of_launches'``|POST|Queues creating the map of all launches.|
+|``/jobs/'list_all_active_rockets'``|POST|Queues getting the list of all active rockets.|
+|``/jobs/'data'``|POST|Queues getting all the data.|
+|``/jobs/'get_orgs'``|POST|Queues getting the list of all organizations.|
+
 # Describing the Space Missions Analysis Data:
 This data contains most space mission launches from 1957 to 2020 by various organizations like SpaceX, CASC, Rocket Lab, and others. It provides data on each rocket’s organization, where it was launched, location of the launch, date and time of launch, whether the rocket is active or retired, how much it cost, and the status of the mission.
 > From the [Kaggle Data Set](https://www.kaggle.com/datasets/sefercanapaydn/mission-launches?resource=download)
