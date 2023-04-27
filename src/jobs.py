@@ -282,7 +282,8 @@ def create_map(full_data_json:dict):
         popup_text = f"Launches: {count}" 
         folium.Marker(location=[lat, lon], popup=popup_text).add_to(world_map)
 
-    world_map.save("map.html")
+    map_html = world_map._repr_html_()
+    return(map_html)
 
 def country_spending_bar_graph(full_data_json:dict):
     '''
