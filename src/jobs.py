@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from geopy.geocoders import Nominatim
 from collections import Counter
 from redis import Redis
-
+'''
 redis_ip = os.environ.get('REDIS_IP')
 if not redis_ip:
     raise Exception()
@@ -12,7 +12,7 @@ if not redis_ip:
 rd = Redis(host = redis_ip, port=6379, db=0)
 q = HotQueue('queue', host = redis_ip, port = 6379, db=1)
 rd2 = Redis(host = redis_ip, port=6379, db=2)
-
+'''
 def get_launches_data() -> dict:
     '''
         This function pulls the full data csv from the current directory and formats
@@ -289,6 +289,17 @@ def create_map(full_data_json:dict):
     world_map.save("map.html")
 
 def country_spending_bar_graph(full_data_json:dict):
+    '''
+        This function searches through the database to find how much
+        spending has gone into space launches in each country that we
+        have data for. It returns a bar graph.
+
+        Args:
+            full_data_json (dict) : the full data json from the database
+        Returns:
+            spending_bar.png (png) : the .png file of the bar graph
+    '''
+
     cost_data = {}
     for item in full_data_json['launches']: 
         address = item['Location']
@@ -328,4 +339,28 @@ def country_spending_bar_graph(full_data_json:dict):
     plt.title('Total Space Launch Spending of Different Countries')
 
     plt.savefig('spending_bar.png')
-    
+
+def get_organization_list(full_data_json:dict) -> list:
+    '''
+        This function goes through the full data json and returns a list
+        of all organizations in the database.
+
+        Args:
+            full_data_json (dict) : the full data json from the database
+        Returns:
+            organization_list (list) : list of all organizations in the database
+    '''
+    organization_list = []
+    for item in full_data_json['launches']:
+        organization_list.append(item['Organisation'])
+
+    my_set = set(organization_list)
+    organization_list = list(my_set)
+
+    return(organization_list)
+
+
+
+
+
+
