@@ -170,6 +170,26 @@ py-debug-deployment-f484b4b99-tprrp     1/1     Running   0          17m
 ```
 > IMPORTANT: Make sure that the status all say Running, else something failed. If it seems to be building, give it some time and try the command again.
 
+Next, use this command to get the service port number:
+```bash
+$ kubectl get services
+```
+
+The output should look like this:
+```
+NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+prod-api-nodeport-service   NodePort    10.233.3.111    <none>        5000:30312/TCP   98m
+prod-redis-service          ClusterIP   10.233.17.157   <none>        6379/TCP         98m
+```
+> The `30312` is the number we need! When you build a new k8 cluster, this number will always change!!!
+
+Lastly, edit the `app-prod-api-ingress.yml`:
+```bash
+$ emacs app-prod-api-ingress.yml
+```
+
+Get to the bottom of the file where it says `number: <number>` and replace it with the new service port number!
+
 Now everything is set up!
 
 
