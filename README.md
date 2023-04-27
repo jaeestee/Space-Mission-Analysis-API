@@ -258,8 +258,26 @@ Expected output: A JSON array containing the details of all the jobs in the job 
 To add a job to the job queue, run the following command with a route from the /help message:
 
 ```
-curl -X POST http://localhost:5000/jobs/<ROUTE>
+curl -X POST http://localhost:5000/jobs/'<ROUTE>'
 ```
+IMPORTANT:
+- The route must be in quotes!!!
+- The routes with secondary queries must follow a '-'
+- Make sure to have the '_' for spaces and the routes!
+
+To get the list of all jobs, run the following command:
+
+```
+curl -X GET http://localhost:5000/jobs
+```
+> The `-X GET` is optional!!
+
+To get the results from a specific job, run the following command with a job ID:
+
+```
+curl -X GET http://localhost:5000/jobs/'<job ID>'
+```
+> Use the Job ID that you get when using the command above or when first querying the job route!
 
 ### Endpoints
 |Route|Method|What it should do|
