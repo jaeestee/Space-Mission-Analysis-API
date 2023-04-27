@@ -37,12 +37,15 @@ def execute_job(item: str) -> dict:
     # PASS THE ROUTE INTO USABLE VARIABLES
     current_route = current_job['route'] # full route, e.g., '/get-rockets-by-org/org'
 
-    args = current_route.split('/') 
+    args = current_route.split('-') 
     function = args[0] # the 'get-rockets-by-org'
     
     # EXECUTE FUNCTION IN ROUTE
     full_data = get_data()
     result = []
+    
+    # AS SPACES AREN'T ALLOWED IN THE TERMINAL, THIS IS A WORKAROUND FOR IT
+    args[1] = args[1].replace('_', ' ')
 
     # SETTING THE STATUS TO COMPLETED NOW SO THAT THIS LINE DOESN'T HAVE TO BE IN EVERY SINGLE IF STATEMENT
     status = 'completed'
@@ -51,7 +54,7 @@ def execute_job(item: str) -> dict:
         result = 'The data does not exist, make sure to POST the data!'
         status = 'incompleted'
     else:
-        if function == 'get-rockets-by-org':
+        if function == 'get_rockets_by_org':
             result = get_rocket_names_by_org(full_data, args[1])
         elif function == 'total-cost-by-org':
             result = get_total_cost_for_org(full_data, args[1])
@@ -62,7 +65,7 @@ def execute_job(item: str) -> dict:
         elif function == 'data':
             result = get_launches_data()
         elif function == 'get-organizations':
-            get_organization_list(full_data)
+            result = get_organization_list(full_data)
         else: 
             status = 'incompleted' # changes to incompleted if the route doesn't exist
             result = 'Could not parse a proper function from the route provided.'
