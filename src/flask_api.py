@@ -103,6 +103,7 @@ POST routes:
 
 DELETE routes:
     /data                               Deletes all of the launch mission data.
+    /jobs/clear                         Clears the current list of jobs.
 '''
     
     return helpOutput
