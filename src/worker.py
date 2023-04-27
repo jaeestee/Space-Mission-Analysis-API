@@ -72,6 +72,4 @@ def execute_job(item: str) -> dict:
 
     #return new_job
 
-if __name__ == '__main__':
-    jid = q.consume()
-    execute_job(jid)
+execute_job()
