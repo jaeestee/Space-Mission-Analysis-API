@@ -118,16 +118,6 @@ def list_of_jobs():
         
 # JOB RELATED
 
-def populate_launch_data():
-    data = {}
-    data['launches'] = []
-
-    with open('mission_launches.csv', 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            data['launches'].append(dict(row))
-    return(data)
-
 def get_data() -> dict:
     """
     This function returns the data from Redis, but only if it exists or is empty.
