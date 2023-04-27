@@ -59,6 +59,8 @@ def execute_job(item: str) -> dict:
             result = create_map(full_data)
         elif function == 'list-all-active-rockets':
             result = list_active_rockets(full_data)
+        elif function == 'data':
+            result = get_launches_data()
         else: 
             status = 'incompleted' # changes to incompleted if the route doesn't exist
             result = 'Could not parse a proper function from the route provided.'
