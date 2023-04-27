@@ -54,7 +54,7 @@ def execute_job(item: str) -> dict:
         result = list_active_rockets(full_data)
     else: 
         result = update_job_status(current_jid, 'uncompleted')
-        return '\n Could not parse a proper function from the route provided.'
+        rd2.set(current_jid, '\n Could not parse a proper function from the route provided.')
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
     rd2.set(current_jid, json.dumps(result))
