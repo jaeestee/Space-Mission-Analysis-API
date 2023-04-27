@@ -47,17 +47,21 @@ def execute_job(item: str) -> dict:
     # SETTING THE STATUS TO COMPLETED NOW SO THAT THIS LINE DOESN'T HAVE TO BE IN EVERY SINGLE IF STATEMENT
     status = 'completed'
     
-    if function == 'get-rockets-by-org':
-        result = get_rocket_names_by_org(full_data, args[1])
-    elif function == 'total-cost-by-org':
-        result = get_total_cost_for_org(full_data, args[1])
-    elif function == 'map-of-launches':
-        result = create_map(full_data)
-    elif function == 'list-all-active-rockets':
-        result = list_active_rockets(full_data)
-    else: 
-        status = 'incompleted' # changes to incompleted if the route doesn't exist
-        result = 'Could not parse a proper function from the route provided.'
+    if full_data == 'The data does not exist.':
+        results = 'The data does not exist, make sure to POST the data!'
+        status = 'incompleted'
+    else:
+        if function == 'get-rockets-by-org':
+            result = get_rocket_names_by_org(full_data, args[1])
+        elif function == 'total-cost-by-org':
+            result = get_total_cost_for_org(full_data, args[1])
+        elif function == 'map-of-launches':
+            result = create_map(full_data)
+        elif function == 'list-all-active-rockets':
+            result = list_active_rockets(full_data)
+        else: 
+            status = 'incompleted' # changes to incompleted if the route doesn't exist
+            result = 'Could not parse a proper function from the route provided.'
     
     # SAVE RESULT AND UPDATE STATUS TO COMPLETE
     rd2.set(current_jid, json.dumps(result))
