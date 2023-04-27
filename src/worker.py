@@ -33,18 +33,23 @@ def execute_job(item: str) -> dict:
 
     # ACQUIRE JOB'S DICTIONARY OBJECT
     current_job = json.loads(rd.get(current_jid))
+    
+    # PASS THE ROUTE INTO USABLE VARIABLES
+    current_route = current_job['route'] # full route, e.g., '/get-rockets-by-org/org'
 
-    # PRASE THE ROUTE INTO USABLE VARIABLES
-    function = current_job['route'] # full route, e.g., '/jobs/names-by-org/'
-
+    args = current_route.split('/') # the 'get-rockets-by-org'
+    
+    function = args[0]
+    
+    
     # EXECUTE FUNCTION IN ROUTE
     full_data = get_data()
     result = []
 
-    if function == 'names-by-org':
-        result = get_rocket_names_by_org(full_data, args[2])
+    if function == 'get-rockets-by-org':
+        result = get_rocket_names_by_org(full_data, args[1])
     elif function == 'total-cost-by-org':
-        result = get_total_cost_for_org(full_data, args[2])
+        result = get_total_cost_for_org(full_data, args[1])
     elif function == 'map-of-launches':
         result = create_map(full_data)
     elif function == 'list-all-active-rockets':
