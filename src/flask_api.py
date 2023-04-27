@@ -70,6 +70,13 @@ def get_job(jid: str) -> dict:
         
     return results
 
+@app.route('/jobs/clear', methods=['DELETE'])
+def clear_jobs() -> str:
+    
+    rd.flushdb()
+    
+    return 'Successfully cleared the jobs list!\n'
+
 @app.route('/help', methods=['GET'])
 def help() -> str:
     """
