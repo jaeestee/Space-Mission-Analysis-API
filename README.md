@@ -130,7 +130,7 @@ Step 6/6 : CMD ["python", "gene_api.py"]
 Removing intermediate container b7b7f007b29f
  ---> 2a2936689823
 Successfully built 2a2936689823
-Successfully tagged jaeestee/gene_api:hw8
+Successfully tagged jaeestee/space_mission_analysis:api
 ```
 Now you have successfully created your own image!
 
@@ -138,7 +138,7 @@ Now you have successfully created your own image!
 ## Pushing the New Image for K8:
 Now that your own image was created, it must be pushed for the Kubernetes Cluster to function properly. To do so, use this command:
 ```bash
-$ docker push <dockerhubusername>/gene_api:hw8
+$ docker push <dockerhubusername>/space_mission_analysis:api
 ```
 
 If done properly, the output should look similar to this:
@@ -162,43 +162,40 @@ hw8: digest: sha256:a722680b5e6dff7fac131dc8128bc1563700e88c67d7c617745ed227b2f0
 
 
 ## Editing a File for K8:
-Since you have your own image now, you need to edit the ```jo25672-test-geneapi-deployment.yml``` file. To do this, enter into any text editing command like this:
+Since you have your own image now, you need to edit the ```app-prod-api-deployment.yml``` file. To do this, enter into any text editing command like this:
 ```bash
-$ emacs jo25672-test-geneapi-deployment.yml
+$ emacs app-prod-api-deployment.yml
 ```
 
 If done properly, the window should look like this:
 ```
 ---
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jo25672-test-geneapi
+  name: prod-api
   labels:
-    app: jo25672-test-geneapi
-    username: jo25672
-    env: test
+    app: prod-api
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: jo25672-test-geneapi
+      app: prod-api
   template:
     metadata:
       labels:
-        app: jo25672-test-geneapi
-        username: jo25672
-        env: test
+        app: prod-api
     spec:
       containers:
-        - name: jo25672-test-geneapi
+        - name: prod-api
           imagePullPolicy: Always
-          image: jaeestee/gene_api:hw8
+          image: jaeestee/space_mission_analysis:api
           env:
           - name: FLASK_APP
-            value: "gene_api.py"
+            value: "flask_api.py"
           - name: REDIS_IP
-            value: jo25672-test-redis-service
+            value: prod-redis-service
           ports:
           - name: http
             containerPort: 5000
